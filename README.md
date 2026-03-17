@@ -28,6 +28,8 @@ composer require spatie/laravel-bluesky-notification-channel
 Add your Bluesky credentials to `config/services.php`:
 
 ```php
+<?php
+
 'bluesky' => [
     'username' => env('BLUESKY_USERNAME'),
     'password' => env('BLUESKY_PASSWORD'),
@@ -39,6 +41,8 @@ Add your Bluesky credentials to `config/services.php`:
 Create a notification that uses the Bluesky channel:
 
 ```php
+<?php
+
 use Illuminate\Notifications\Notification;
 use Spatie\BlueskyNotificationChannel\BlueskyChannel;
 use Spatie\BlueskyNotificationChannel\BlueskyPost;
@@ -63,6 +67,8 @@ class MyNotification extends Notification
 The package automatically detects links, mentions and hashtags in your post text. You can also add them manually:
 
 ```php
+<?php
+
 use Spatie\BlueskyNotificationChannel\BlueskyPost;
 use Spatie\BlueskyNotificationChannel\Facets\Link;
 use Spatie\BlueskyNotificationChannel\Facets\Facet;
@@ -76,6 +82,8 @@ BlueskyPost::make()
 Link embeds are automatically resolved from the first link in your post. You can also specify an embed URL manually:
 
 ```php
+<?php
+
 BlueskyPost::make()
     ->text('Check this out!')
     ->embedUrl('https://spatie.be')
@@ -86,6 +94,8 @@ BlueskyPost::make()
 You can set the language of your post:
 
 ```php
+<?php
+
 BlueskyPost::make()
     ->text('Hello!')
     ->language('en')
@@ -110,6 +120,8 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
 
 ## Credits
+
+This package is a fork of [innocenzi/bluesky-notification-channel](https://github.com/innocenzi/bluesky-notification-channel) by [Enzo Innocenzi](https://github.com/innocenzi).
 
 - [Freek Van der Herten](https://github.com/freekmurze)
 - [All Contributors](../../contributors)
