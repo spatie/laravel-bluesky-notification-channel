@@ -1,0 +1,37 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: src/BlueskyPost.php
+
+		-
+			message: '#^Access to an undefined property Spatie\\BlueskyNotificationChannel\\Facets\\Feature\:\:\$uri\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Embeds/LinkEmbedResolverUsingCardyb.php
+
+		-
+			message: '#^Negated boolean expression is always false\.$#'
+			identifier: booleanNot.alwaysFalse
+			count: 1
+			path: src/Embeds/LinkEmbedResolverUsingCardyb.php
+
+		-
+			message: '#^Parameter \$callback of method Illuminate\\Support\\Collection\<\(int\|string\),mixed\>\:\:first\(\) expects \(callable\(mixed, int\|string\)\: bool\)\|null, Closure\(Spatie\\BlueskyNotificationChannel\\Facets\\Facet\)\: \(Spatie\\BlueskyNotificationChannel\\Facets\\Feature\|null\) given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Embeds/LinkEmbedResolverUsingCardyb.php
+
+		-
+			message: '#^Parameter \#1 \$string of function str expects string\|null, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Exceptions/BlueskyClientException.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 4
+			path: src/Exceptions/BlueskyClientException.php
