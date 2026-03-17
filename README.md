@@ -28,8 +28,6 @@ composer require spatie/laravel-bluesky-notification-channel
 Add your Bluesky credentials to `config/services.php`:
 
 ```php
-<?php
-
 'bluesky' => [
     'username' => env('BLUESKY_USERNAME'),
     'password' => env('BLUESKY_PASSWORD'),
@@ -82,8 +80,6 @@ BlueskyPost::make()
 Link embeds are automatically resolved from the first link in your post. You can also specify an embed URL manually:
 
 ```php
-<?php
-
 BlueskyPost::make()
     ->text('Check this out!')
     ->embedUrl('https://spatie.be')
@@ -94,8 +90,6 @@ BlueskyPost::make()
 You can set the language of your post:
 
 ```php
-<?php
-
 BlueskyPost::make()
     ->text('Hello!')
     ->language('en')
