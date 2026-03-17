@@ -1,11 +1,43 @@
-# Bluesky notification channel for the Laravel framework
+# Send Bluesky notifications in Laravel
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/laravel-bluesky-notification-channel.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-bluesky-notification-channel)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/spatie/laravel-bluesky-notification-channel/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/spatie/laravel-bluesky-notification-channel/actions?query=workflow%3Arun-tests+branch%3Amain)
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/spatie/laravel-bluesky-notification-channel/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/spatie/laravel-bluesky-notification-channel/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-bluesky-notification-channel.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-bluesky-notification-channel)
 
-This package makes it easy to send notifications using [Bluesky](https://bsky.app) with Laravel.
+This package makes it easy to send notifications to [Bluesky](https://bsky.app) using Laravel's notification system. Links, mentions and hashtags are automatically detected and rendered as rich text.
+
+Here's how you can use it:
+
+```php
+BlueskyPost::make()
+    ->text('Hello from Laravel! Check out https://spatie.be')
+    ->language('en');
+```
+
+In a notification:
+
+```php
+<?php
+
+use Illuminate\Notifications\Notification;
+use Spatie\BlueskyNotificationChannel\BlueskyChannel;
+use Spatie\BlueskyNotificationChannel\BlueskyPost;
+
+class ServerDownNotification extends Notification
+{
+    public function via($notifiable): array
+    {
+        return [BlueskyChannel::class];
+    }
+
+    public function toBluesky($notifiable): BlueskyPost
+    {
+        return BlueskyPost::make()
+            ->text("Our server {$this->server->name} is down!");
+    }
+}
+```
 
 ## Support us
 
@@ -23,8 +55,6 @@ You can install the package via composer:
 composer require spatie/laravel-bluesky-notification-channel
 ```
 
-## Configuration
-
 Add your Bluesky credentials to `config/services.php`:
 
 ```php
@@ -36,48 +66,23 @@ Add your Bluesky credentials to `config/services.php`:
 
 ## Usage
 
-Create a notification that uses the Bluesky channel:
+### Creating posts
+
+You can create a post using the `BlueskyPost` class:
 
 ```php
-<?php
-
-use Illuminate\Notifications\Notification;
-use Spatie\BlueskyNotificationChannel\BlueskyChannel;
-use Spatie\BlueskyNotificationChannel\BlueskyPost;
-
-class MyNotification extends Notification
-{
-    public function via($notifiable): array
-    {
-        return [BlueskyChannel::class];
-    }
-
-    public function toBluesky($notifiable): BlueskyPost
-    {
-        return BlueskyPost::make()
-            ->text('Hello from Laravel!');
-    }
-}
-```
-
-### Rich text (facets)
-
-The package automatically detects links, mentions and hashtags in your post text. You can also add them manually:
-
-```php
-<?php
-
-use Spatie\BlueskyNotificationChannel\BlueskyPost;
-use Spatie\BlueskyNotificationChannel\Facets\Link;
-use Spatie\BlueskyNotificationChannel\Facets\Facet;
-
 BlueskyPost::make()
-    ->text('Check out https://spatie.be for great Laravel packages!')
+    ->text('Hello, Bluesky!')
+    ->language('en');
 ```
+
+### Rich text
+
+The package automatically detects links, mentions (`@handle.bsky.social`) and hashtags (`#topic`) in your post text and converts them to rich text facets.
 
 ### Embeds
 
-Link embeds are automatically resolved from the first link in your post. You can also specify an embed URL manually:
+Link embeds (cards with title, description and thumbnail) are automatically resolved from the first link in your post. You can also specify an embed URL explicitly:
 
 ```php
 BlueskyPost::make()
@@ -85,14 +90,36 @@ BlueskyPost::make()
     ->embedUrl('https://spatie.be')
 ```
 
-### Languages
-
-You can set the language of your post:
+If you want to disable automatic embed resolution, call `withoutAutomaticEmbeds()`:
 
 ```php
 BlueskyPost::make()
-    ->text('Hello!')
-    ->language('en')
+    ->text('https://spatie.be')
+    ->withoutAutomaticEmbeds()
+```
+
+### Using the service directly
+
+You can also send posts without using notifications by resolving the `BlueskyService` from the container:
+
+```php
+use Spatie\BlueskyNotificationChannel\BlueskyService;
+
+app(BlueskyService::class)->createPost('Hello, Bluesky!');
+```
+
+### Customization
+
+You can swap out the default implementations by binding your own classes in a service provider:
+
+```php
+use Spatie\BlueskyNotificationChannel\Facets\FacetsResolver;
+use Spatie\BlueskyNotificationChannel\Embeds\EmbedResolver;
+use Spatie\BlueskyNotificationChannel\IdentityRepository\IdentityRepository;
+
+$this->app->singleton(FacetsResolver::class, MyCustomFacetsResolver::class);
+$this->app->singleton(EmbedResolver::class, MyCustomEmbedResolver::class);
+$this->app->singleton(IdentityRepository::class, MyCustomIdentityRepository::class);
 ```
 
 ## Testing
@@ -104,10 +131,6 @@ composer test
 ## Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
-
-## Contributing
-
-Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ## Security Vulnerabilities
 
