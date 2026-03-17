@@ -20,7 +20,7 @@ abstract class BlueskyClientException extends BlueskyException
 
     protected static function createSuffix(int $status, ?string $error, ?string $message): string
     {
-        return str($status)
+        return str((string) $status)
             ->when($error || $message)
             ->append(', '.implode(': ', array_filter([$error, $message])))
             ->toString();

@@ -33,7 +33,7 @@ trait SerializesToLexiconObject
 
                 return $value;
             })
-            ->filter()
+            ->filter(fn (mixed $value) => $value !== null)
             ->toArray();
     }
 }

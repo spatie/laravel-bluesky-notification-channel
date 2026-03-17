@@ -2,15 +2,20 @@
 
 namespace Spatie\BlueskyNotificationChannel\Embeds;
 
-use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Client\Factory as HttpClient;
 use Spatie\BlueskyNotificationChannel\BlueskyPost;
 use Spatie\BlueskyNotificationChannel\BlueskyService;
 use Spatie\BlueskyNotificationChannel\Facets\Facet;
 use Spatie\BlueskyNotificationChannel\Facets\Feature;
+use Spatie\BlueskyNotificationChannel\Facets\Link;
 
 final class LinkEmbedResolverUsingCardyb implements EmbedResolver
 {
     public const ENDPOINT = 'https://cardyb.bsky.app/v1/extract';
+
+    public function __construct(
+        private readonly HttpClient $httpClient,
+    ) {}
 
     public function resolve(BlueskyService $bluesky, BlueskyPost $post): ?Embed
     {
@@ -18,10 +23,11 @@ final class LinkEmbedResolverUsingCardyb implements EmbedResolver
             return null;
         }
 
-        /** @var Facet */
-        $firstLink = collect($post->facets)->first(
-            callback: fn (Facet $facet) => collect($facet->getFeatures())->first(
-                callback: fn (Feature $feature) => $feature->getType() === 'app.bsky.richtext.facet#link',
+        $firstLink = array_find(
+            $post->facets,
+            fn (Facet $facet) => array_find(
+                $facet->getFeatures(),
+                fn (Feature $feature) => $feature->getType() === 'app.bsky.richtext.facet#link',
             ),
         );
 
@@ -29,12 +35,21 @@ final class LinkEmbedResolverUsingCardyb implements EmbedResolver
             return null;
         }
 
-        return $this->createEmbedFromUrl($bluesky, $firstLink->getFeatures()[0]->uri);
+        $linkFeature = array_find(
+            $firstLink->getFeatures(),
+            fn (Feature $feature) => $feature instanceof Link,
+        );
+
+        if (! $linkFeature instanceof Link) {
+            return null;
+        }
+
+        return $this->createEmbedFromUrl($bluesky, $linkFeature->uri);
     }
 
     public function createEmbedFromUrl(BlueskyService $bluesky, string $url): ?Embed
     {
-        $embed = Http::get(self::ENDPOINT, [
+        $embed = $this->httpClient->get(self::ENDPOINT, [
             'url' => $url,
         ]);
 

@@ -7,28 +7,10 @@ parameters:
 			path: src/BlueskyPost.php
 
 		-
-			message: '#^Access to an undefined property Spatie\\BlueskyNotificationChannel\\Facets\\Feature\:\:\$uri\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Embeds/LinkEmbedResolverUsingCardyb.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: src/Embeds/LinkEmbedResolverUsingCardyb.php
-
-		-
-			message: '#^Parameter \$callback of method Illuminate\\Support\\Collection\<\(int\|string\),mixed\>\:\:first\(\) expects \(callable\(mixed, int\|string\)\: bool\)\|null, Closure\(Spatie\\BlueskyNotificationChannel\\Facets\\Facet\)\: \(Spatie\\BlueskyNotificationChannel\\Facets\\Feature\|null\) given\.$#'
+			message: '#^Parameter \#2 \$callback of function array_find expects callable\(mixed, int\|string\)\: bool, Closure\(Spatie\\BlueskyNotificationChannel\\Facets\\Facet\)\: \(Spatie\\BlueskyNotificationChannel\\Facets\\Feature\|null\) given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Embeds/LinkEmbedResolverUsingCardyb.php
-
-		-
-			message: '#^Parameter \#1 \$string of function str expects string\|null, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Exceptions/BlueskyClientException.php
 
 		-
 			message: '#^Unsafe usage of new static\(\)\.$#'

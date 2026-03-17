@@ -13,4 +13,10 @@ class TestCase extends Orchestra
             BlueskyServiceProvider::class,
         ];
     }
+
+    protected function getEnvironmentSetUp($app): void
+    {
+        $app['config']->set('services.bluesky.username', 'test.bsky.social');
+        $app['config']->set('services.bluesky.password', 'test-password');
+    }
 }

@@ -76,6 +76,11 @@ class BlueskyPost
         return $this;
     }
 
+    public function automaticallyResolvesEmbeds(): bool
+    {
+        return $this->automaticallyResolvesEmbeds;
+    }
+
     public function withoutAutomaticEmbeds(): static
     {
         $this->automaticallyResolvesEmbeds = false;
@@ -83,9 +88,9 @@ class BlueskyPost
         return $this;
     }
 
-    public function automaticallyResolvesEmbeds(): bool
+    public function automaticallyResolvesFacets(): bool
     {
-        return $this->automaticallyResolvesEmbeds;
+        return $this->automaticallyResolvesFacets;
     }
 
     public function withoutAutomaticFacets(): static
@@ -93,11 +98,6 @@ class BlueskyPost
         $this->automaticallyResolvesFacets = false;
 
         return $this;
-    }
-
-    public function automaticallyResolvesFacets(): bool
-    {
-        return $this->automaticallyResolvesFacets;
     }
 
     public function toArray(): array

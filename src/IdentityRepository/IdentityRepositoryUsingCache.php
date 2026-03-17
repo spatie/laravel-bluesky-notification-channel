@@ -22,11 +22,13 @@ class IdentityRepositoryUsingCache implements IdentityRepository
 
     public function getIdentity(): BlueskyIdentity
     {
-        if (! $this->hasIdentity()) {
+        $identity = $this->cache->get($this->key);
+
+        if (! $identity instanceof BlueskyIdentity) {
             throw NoBlueskyIdentityFound::create();
         }
 
-        return $this->cache->get($this->key);
+        return $identity;
     }
 
     public function setIdentity(BlueskyIdentity $identity): void

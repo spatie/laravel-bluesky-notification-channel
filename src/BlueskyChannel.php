@@ -14,7 +14,7 @@ class BlueskyChannel
     public function send(mixed $notifiable, Notification $notification): string
     {
         if (! method_exists($notification, 'toBluesky')) {
-            throw NoBlueskyChannel::create(\get_class($notification));
+            throw NoBlueskyChannel::create($notification::class);
         }
 
         return $this->bluesky->createPost(
