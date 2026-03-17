@@ -5,8 +5,6 @@ namespace Spatie\BlueskyNotificationChannel\Embeds;
 use Illuminate\Http\Client\Factory as HttpClient;
 use Spatie\BlueskyNotificationChannel\BlueskyPost;
 use Spatie\BlueskyNotificationChannel\BlueskyService;
-use Spatie\BlueskyNotificationChannel\Facets\Facet;
-use Spatie\BlueskyNotificationChannel\Facets\Feature;
 use Spatie\BlueskyNotificationChannel\Facets\Link;
 
 final class LinkEmbedResolverUsingCardyb implements EmbedResolver
@@ -19,32 +17,26 @@ final class LinkEmbedResolverUsingCardyb implements EmbedResolver
 
     public function resolve(BlueskyService $bluesky, BlueskyPost $post): ?Embed
     {
-        if (\count($post->facets) === 0) {
+        $link = $this->findFirstLink($post);
+
+        if (! $link) {
             return null;
         }
 
-        $firstLink = array_find(
-            $post->facets,
-            fn (Facet $facet) => array_find(
-                $facet->getFeatures(),
-                fn (Feature $feature) => $feature->getType() === 'app.bsky.richtext.facet#link',
-            ),
-        );
+        return $this->createEmbedFromUrl($bluesky, $link->uri);
+    }
 
-        if (! $firstLink) {
-            return null;
+    private function findFirstLink(BlueskyPost $post): ?Link
+    {
+        foreach ($post->facets as $facet) {
+            foreach ($facet->getFeatures() as $feature) {
+                if ($feature instanceof Link) {
+                    return $feature;
+                }
+            }
         }
 
-        $linkFeature = array_find(
-            $firstLink->getFeatures(),
-            fn (Feature $feature) => $feature instanceof Link,
-        );
-
-        if (! $linkFeature instanceof Link) {
-            return null;
-        }
-
-        return $this->createEmbedFromUrl($bluesky, $linkFeature->uri);
+        return null;
     }
 
     public function createEmbedFromUrl(BlueskyService $bluesky, string $url): ?Embed

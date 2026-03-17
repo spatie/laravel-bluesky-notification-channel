@@ -45,9 +45,7 @@ it('detects mentions in text', function () {
 
     $facets = $resolver->resolve(app(BlueskyService::class), $post);
 
-    $mentionFacets = array_values(array_filter($facets, function ($facet) {
-        return $facet->getFeatures()[0] instanceof Mention;
-    }));
+    $mentionFacets = array_values(array_filter($facets, fn ($facet) => $facet->getFeatures()[0] instanceof Mention));
 
     expect($mentionFacets)->toHaveCount(1);
     expect($mentionFacets[0]->getFeatures()[0])
@@ -62,9 +60,7 @@ it('detects hashtags in text', function () {
 
     $facets = $resolver->resolve(app(BlueskyService::class), $post);
 
-    $tagFacets = array_values(array_filter($facets, function ($facet) {
-        return $facet->getFeatures()[0] instanceof Tag;
-    }));
+    $tagFacets = array_values(array_filter($facets, fn ($facet) => $facet->getFeatures()[0] instanceof Tag));
 
     expect($tagFacets)->toHaveCount(1);
     expect($tagFacets[0]->getFeatures()[0])
@@ -93,9 +89,7 @@ it('skips unresolvable mentions', function () {
 
     $facets = $resolver->resolve(app(BlueskyService::class), $post);
 
-    $mentionFacets = array_filter($facets, function ($facet) {
-        return $facet->getFeatures()[0] instanceof Mention;
-    });
+    $mentionFacets = array_filter($facets, fn ($facet) => $facet->getFeatures()[0] instanceof Mention);
 
     expect($mentionFacets)->toBeEmpty();
 });

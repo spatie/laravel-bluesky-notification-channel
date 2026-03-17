@@ -7,12 +7,6 @@ parameters:
 			path: src/BlueskyPost.php
 
 		-
-			message: '#^Parameter \#2 \$callback of function array_find expects callable\(mixed, int\|string\)\: bool, Closure\(Spatie\\BlueskyNotificationChannel\\Facets\\Facet\)\: \(Spatie\\BlueskyNotificationChannel\\Facets\\Feature\|null\) given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Embeds/LinkEmbedResolverUsingCardyb.php
-
-		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
 			identifier: new.static
 			count: 4
